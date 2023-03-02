@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react';
 
+interface RemotePaymentMethod {
+  name: string;
+}
+
+interface LocalPaymentMethod {
+  provider: string;
+  label: string;
+}
+
 export const Payment = ({ amount }: { amount: number }) => {
-  const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<LocalPaymentMethod[]>(
+    []
+  );
 
   useEffect(() => {
     const fetchPaymentMethods = async () => {
       const url = 'http://localhost:8080/';
 
       const response = await fetch(url);
-      const methods: any[] = await response.json();
+      const methods: RemotePaymentMethod[] = await response.json();
 
       if (methods.length > 0) {
         const extended = methods.map((method) => ({
