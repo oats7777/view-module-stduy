@@ -9,7 +9,7 @@ interface LocalPaymentMethod {
   label: string;
 }
 
-export const Payment = ({ amount }: { amount: number }) => {
+const usePaymentMethods = () => {
   const [paymentMethods, setPaymentMethods] = useState<LocalPaymentMethod[]>(
     []
   );
@@ -22,7 +22,7 @@ export const Payment = ({ amount }: { amount: number }) => {
       const methods: RemotePaymentMethod[] = await response.json();
 
       if (methods.length > 0) {
-        const extended = methods.map((method) => ({
+        const extended: LocalPaymentMethod[] = methods.map((method) => ({
           provider: method.name,
           label: `Pay with ${method.name}`,
         }));
@@ -35,6 +35,14 @@ export const Payment = ({ amount }: { amount: number }) => {
 
     fetchPaymentMethods();
   }, []);
+
+  return {
+    paymentMethods,
+  };
+};
+
+export const Payment = ({ amount }: { amount: number }) => {
+  const { paymentMethods } = usePaymentMethods();
 
   return (
     <div>
