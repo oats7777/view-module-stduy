@@ -1,18 +1,16 @@
-import { useMemo, useState } from 'react';
 import usePaymentMethods from '../hooks/usePaymentMethods';
+import { useRoundUp } from '../hooks/useRoundUp';
 import { PaymentMethods } from './PaymentMethods';
+
+const formatCheckboxLabel = (agreeToDonate: boolean, tip: number) => {
+  return agreeToDonate
+    ? 'Thanks for your donation.'
+    : `I would like to donate $${tip} to charity.`;
+};
 
 export const Payment = ({ amount }: { amount: number }) => {
   const { paymentMethods } = usePaymentMethods();
-  const [agreeToDonate, setAgreeToDonate] = useState(false);
-
-  const { total, tip } = useMemo(
-    () => ({
-      total: agreeToDonate ? Math.floor(amount + 1) : amount,
-      tip: parseFloat((Math.floor(amount + 1) - amount).toPrecision(10)),
-    }),
-    [amount, agreeToDonate]
-  );
+  const { agreeToDonate, total, tip, updateAgreeToDonate } = useRoundUp(amount);
 
   return (
     <div>
@@ -22,16 +20,10 @@ export const Payment = ({ amount }: { amount: number }) => {
         <label>
           <input
             type="checkbox"
-            onChange={() => {
-              setAgreeToDonate((agreeToDonate) => !agreeToDonate);
-            }}
+            onChange={updateAgreeToDonate}
             checked={agreeToDonate}
           />
-          <p>
-            {agreeToDonate
-              ? 'Thanks for your donation.'
-              : `I would like to donate $${tip} to charity.`}
-          </p>
+          <p>{formatCheckboxLabel(agreeToDonate, tip)}</p>
         </label>
       </div>
       <button>${total}</button>
