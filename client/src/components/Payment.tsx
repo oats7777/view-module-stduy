@@ -3,15 +3,29 @@ import { useRoundUp } from '../hooks/useRoundUp';
 import { PaymentMethods } from './PaymentMethods';
 import { DonationCheckbox } from './DonationCheckbox';
 
-const formatCheckboxLabel = (agreeToDonate: boolean, tip: number) => {
+const formatCheckboxLabel = (
+  agreeToDonate: boolean,
+  tip: number,
+  countryCode: string
+) => {
+  const currencySign = countryCode === 'JP' ? '¥' : '$';
   return agreeToDonate
     ? 'Thanks for your donation.'
-    : `I would like to donate $${tip} to charity.`;
+    : `I would like to donate ${currencySign}${tip} to charity.`;
 };
 
-export const Payment = ({ amount }: { amount: number }) => {
+export const Payment = ({
+  amount,
+  countryCode,
+}: {
+  amount: number;
+  countryCode: string;
+}) => {
   const { paymentMethods } = usePaymentMethods();
-  const { agreeToDonate, total, tip, updateAgreeToDonate } = useRoundUp(amount);
+  const { agreeToDonate, total, tip, updateAgreeToDonate } = useRoundUp(
+    amount,
+    countryCode
+  );
 
   return (
     <div>
@@ -20,9 +34,12 @@ export const Payment = ({ amount }: { amount: number }) => {
       <DonationCheckbox
         onChange={updateAgreeToDonate}
         checked={agreeToDonate}
-        content={formatCheckboxLabel(agreeToDonate, tip)}
+        content={formatCheckboxLabel(agreeToDonate, tip, countryCode)}
       />
-      <button>${total}</button>
+      <button>
+        {countryCode === 'JP' ? '¥' : '$'}
+        {total}
+      </button>
     </div>
   );
 };
