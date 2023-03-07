@@ -1,5 +1,5 @@
 import './App.css';
-import { Payment } from './Payment';
+import { Payment } from './components/Payment';
 
 function App() {
   return (

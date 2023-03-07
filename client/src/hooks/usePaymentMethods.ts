@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import PaymentMethod from './PaymentMethod';
-import { RemotePaymentMethod } from './types';
+import PaymentMethod from '../models/PaymentMethod';
+import { RemotePaymentMethod } from '../types';
 
 const usePaymentMethods = () => {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
